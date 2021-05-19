@@ -1,3 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 /**
  * @author Adrian Bedford 22973676
  * @author Siwei Lin 22967534
@@ -5,7 +8,10 @@
 
 public class MyProject implements Project {
     public boolean allDevicesConnected(int[][] adjlist) {
-        // TODO
+        Queue<Integer> q = new ArrayDeque<>();
+        int length = adjlist.length;
+        boolean[] results = new boolean[length];
+        
         return false;
     }
 
