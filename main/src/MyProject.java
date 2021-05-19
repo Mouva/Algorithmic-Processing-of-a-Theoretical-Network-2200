@@ -12,7 +12,19 @@ public class MyProject implements Project {
         int length = adjlist.length;
         boolean[] results = new boolean[length];
         
-        return false;
+
+
+
+
+        for (int i = 0; i < adjlist.length; i++) {
+            if (visitedList[i] == false) {
+                return false
+            }
+            return true
+
+        }
+
+
     }
 
     public int numPaths(int[][] adjlist, int src, int dst) {
