@@ -26,7 +26,7 @@ public class MyProject implements Project {
             }
         }
         
-        for (int i = 0; i < adjlist.length; i++) {
+        for (int i = 0; i < length; i++) {
             if (results[i] == false) {
                 connected = false;
             }
