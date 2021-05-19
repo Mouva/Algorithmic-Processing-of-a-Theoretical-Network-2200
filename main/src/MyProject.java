@@ -27,10 +27,10 @@ public class MyProject implements Project {
         }
         
         for (int i = 0; i < adjlist.length; i++) {
-            if (visitedList[i] == false) {
-                return false;
+            if (results[i] == false) {
+                connected = false;
             }
-            return true;
+            connected = true;
         }
 
         return connected;
