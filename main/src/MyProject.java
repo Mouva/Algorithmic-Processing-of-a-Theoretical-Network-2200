@@ -11,7 +11,7 @@ public class MyProject implements Project {
         Queue<Integer> q = new ArrayDeque<>(0);
         int length = adjlist.length;
         boolean[] results = new boolean[length];
-        boolean connected = false;
+        boolean connected = true;
 
         for (int i = 0; i < length; i++) {
             results[i] = false;
@@ -30,9 +30,7 @@ public class MyProject implements Project {
             if (results[i] == false) {
                 connected = false;
             }
-            connected = true;
         }
-
         return connected;
     }
 }
