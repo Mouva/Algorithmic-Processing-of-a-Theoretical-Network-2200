@@ -1,6 +1,6 @@
 /**
  * @author Adrian Bedford 22973676
- * @author PUT YOUR DETAILS HERE MY GUY
+ * @author Siwei Lin 22967534
  */
 
 public class MyProject implements Project {
