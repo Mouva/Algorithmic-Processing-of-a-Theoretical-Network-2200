@@ -25,6 +25,14 @@ public class MyProject implements Project {
                     q.add(adjlist[current][i]);
             }
         }
+        
+        for (int i = 0; i < adjlist.length; i++) {
+            if (visitedList[i] == false) {
+                return false;
+            }
+            return true;
+        }
+
         return connected;
     }
 }
