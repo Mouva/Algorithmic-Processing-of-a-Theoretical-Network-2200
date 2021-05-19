@@ -1,4 +1,7 @@
-// Full Name (StudentNum)
+/**
+ * @author Adrian Bedford 22973676
+ * @author PUT YOUR DETAILS HERE MY GUY
+ */
 
 public class MyProject implements Project {
     public boolean allDevicesConnected(int[][] adjlist) {
