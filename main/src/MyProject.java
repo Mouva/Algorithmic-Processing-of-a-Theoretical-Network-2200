@@ -46,8 +46,27 @@ public class MyProject implements Project {
 
     /**
      * Algorithm used?
+     * Does this work for an assumed destination node? Or is it just travelling to every nodes shortest path
      */
     public int numPaths(int[][] adjlist, int src, int dst) {
+        int length = adjlist.length;
+        int[] dist = new int[length]; 
+        int[] path = new int[length];
+          
+        for (int i = 0; i < length; i++)
+            dist[i] = Integer.MAX_VALUE;
+  
+        for (int i = 0; i < length; i++)
+            path[i] = 0;
+  
+        bfs(adjlist, src, length);
+  
+        System.out.print("Numbers of shortest Paths are: ");
+        for (int i = 0; i < length; i++)
+            System.out.print(path[i] + " ");
+    }
+
+    private void bfs(int[][] adjlist, int src, int dst) {
         int length = adjlist.length;
         Queue<Integer> q = new ArrayDeque<>();
         boolean[] results = new boolean[length];
@@ -65,7 +84,6 @@ public class MyProject implements Project {
         while (!q.isEmpty()) {
             int current = q.remove();
             results[current] = true;
-
             for (int x : adjlist[current]) {
                 if (!results[x]) {
                     q.add(x);
@@ -78,10 +96,8 @@ public class MyProject implements Project {
                 else if (dist[x] == dist[current]) {
                     path[x] += path[current];
                 }
-            }   
+            }
         }
-
-        return 0;
     }
 
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
