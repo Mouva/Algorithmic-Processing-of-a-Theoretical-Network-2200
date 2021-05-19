@@ -1,6 +1,8 @@
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import javax.swing.plaf.TreeUI;
+
 /**
  * @author Adrian Bedford 22973676
  * @author Siwei Lin 22967534
@@ -23,17 +25,19 @@ public class MyProject implements Project {
             for (int i = 0; i < length; i++) {
                 if (!results[adjlist[current][i]]) {
                     q.add(adjlist[current][i]);
-            }
+                }
+            }   
         }
         
         for (int i = 0; i < length; i++) {
-            if (results[i] == false) {
+            if (!results[i]) {
                 connected = false;
+                break;
+                }
             }
-        }
+        
         return connected;
     }
-}
 
     public int numPaths(int[][] adjlist, int src, int dst) {
         // TODO
