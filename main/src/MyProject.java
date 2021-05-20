@@ -53,7 +53,7 @@ public class MyProject implements Project {
 
         for (int i = 0; i < length; i++) {
             checked[i] = false;
-            numPaths[i] = 0;
+            numPaths[i] = 1;
             distance[i] = Integer.MAX_VALUE;
         }
 
@@ -65,12 +65,14 @@ public class MyProject implements Project {
             for (int branch : adjlist[current]) {
 
                 if (!checked[branch]) {
+                    //System.out.println("queue getting stuff");
                     q.add(branch);
                     checked[branch] = true;
                 }
 
                 //carry over number of paths
                 if (distance[branch] > distance[current] + 1) {
+                    //System.out.println("conditional 2");
                     distance[branch] = distance[current] + 1;
                     numPaths[branch] = numPaths[current];
                 }
@@ -79,13 +81,14 @@ public class MyProject implements Project {
                 *   ie. equals to dist[current] + 1
                 */
                 else if (distance[branch] == distance[current] + 1) {
+                    //System.out.println("conditional 3");
                     numPaths[branch] += numPaths[current];
                 }
 
                 
             } 
         }
-
+        System.out.println(numPaths[dst]);
         return numPaths[dst];
     }
 
