@@ -42,71 +42,78 @@ public class MyProject implements Project {
     }
 
     /**
-     * BFS
-     * Does this work for an assumed destination node? Or is it just travelling to every nodes shortest path
+     * Modified BFS
      */
     public int numPaths(int[][] adjlist, int src, int dst) {
         int length = adjlist.length;
-        int[] dist = new int[length]; 
-        int[] path = new int[length];
-          
-        for (int i = 0; i < length; i++)
-            dist[i] = Integer.MAX_VALUE;
-  
-        for (int i = 0; i < length; i++)
-            path[i] = 0;
-  
-        bfs(adjlist, src);
-  
-        return path.length;
-    }
-    
-    
-    private void bfs(int[][] adjlist, int src) {
-        int length = adjlist.length;
         Queue<Integer> q = new ArrayDeque<>();
-        boolean[] results = new boolean[length];
-        int[] dist = new int[length];
-        int[] path = new int[length];
+        boolean[] checked = new boolean[length];
+        int[] distance = new int[length];
+        int[] numPaths = new int[length];
 
         for (int i = 0; i < length; i++) {
-            results[i] = false;
+            checked[i] = false;
+            numPaths[i] = 0;
+            distance[i] = Integer.MAX_VALUE;
         }
-        dist[src] = 0;
-        path[src] = 1;
 
         q.add(src);
-        results[src] = true;
+        checked[src] = true;
         while (!q.isEmpty()) {
             int current = q.remove();
-            results[current] = true;
-            for (int x : adjlist[current]) {
-                if (!results[x]) {
-                    q.add(x);
-                    results[x] = true;
+
+            for (int branch : adjlist[current]) {
+
+                if (!checked[branch]) {
+                    q.add(branch);
+                    checked[branch] = true;
                 }
-                if (dist[x] > dist[current] + 1) {
-                    dist[x] = dist[current] + 1;
-                    path[x] = path[current];
+
+                //carry over number of paths
+                if (distance[branch] > distance[current] + 1) {
+                    distance[branch] = distance[current] + 1;
+                    numPaths[branch] = numPaths[current];
                 }
-                else if (dist[x] == dist[current]) {
-                    path[x] += path[current];
+
+                /*  branch is on the shortest path 
+                *   ie. equals to dist[current] + 1
+                */
+                else if (distance[branch] == distance[current] + 1) {
+                    numPaths[branch] += numPaths[current];
                 }
-            }
+
+                
+            } 
         }
+
+        return numPaths[dst];
     }
-    
 
-
-
+    /**
+     * Another modified BFS idk
+     * Lacks ability to recognise what the present query is, need to add a loop to track this
+     */
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
+        int count = 0;
         int length = adjlist.length;
+        int[] distances = new int[length];
+
         for (int i = 0; i < length; i++) {
-            if (queries[i][i] != addrs[i][i]) {
-                break;
+            for (int j = 0; j < length; j++) {
+                if (queries[j] != addrs[j]) {
+                    count++;
+                } else {
+                    distances[queries[j][j]] = count;
+                    count = 0;
+                    break;
+                }
             }
         }
-        return null;
+        for (int i = 0; i < length; i++) {
+            System.out.println(queries[i][i] + "and" + addrs[i][i]);
+            System.out.println(queries[i] + "and" + addrs[i]);
+        }  
+        return distances;
     }
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
