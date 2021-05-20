@@ -1,7 +1,5 @@
 import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.*;
-import java.io.*;
 
 /**
  * @author Adrian Bedford 22973676
@@ -11,7 +9,6 @@ import java.io.*;
 public class MyProject implements Project {
     /**
      * Breadth-first search
-     * Change for loops to iterate over elements, maybe improves quality
      */
     public boolean allDevicesConnected(int[][] adjlist) {
         int length = adjlist.length;
@@ -45,7 +42,7 @@ public class MyProject implements Project {
     }
 
     /**
-     * Algorithm used?
+     * BFS
      * Does this work for an assumed destination node? Or is it just travelling to every nodes shortest path
      */
     public int numPaths(int[][] adjlist, int src, int dst) {
@@ -59,14 +56,13 @@ public class MyProject implements Project {
         for (int i = 0; i < length; i++)
             path[i] = 0;
   
-        bfs(adjlist, src, length);
+        bfs(adjlist, src);
   
-        System.out.print("Numbers of shortest Paths are: ");
-        for (int i = 0; i < length; i++)
-            System.out.print(path[i] + " ");
+        return path.length;
     }
-
-    private void bfs(int[][] adjlist, int src, int dst) {
+    
+    
+    private void bfs(int[][] adjlist, int src) {
         int length = adjlist.length;
         Queue<Integer> q = new ArrayDeque<>();
         boolean[] results = new boolean[length];
@@ -99,9 +95,17 @@ public class MyProject implements Project {
             }
         }
     }
+    
+
+
 
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
-        // TODO
+        int length = adjlist.length;
+        for (int i = 0; i < length; i++) {
+            if (queries[i][i] != addrs[i][i]) {
+                break;
+            }
+        }
         return null;
     }
 
