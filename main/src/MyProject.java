@@ -51,6 +51,10 @@ public class MyProject implements Project {
         int[] distance = new int[length];
         int[] numPaths = new int[length];
 
+        if (src == dst) {
+            return 1;
+        }
+
         for (int i = 0; i < length; i++) {
             checked[i] = false;
             numPaths[i] = 1;
@@ -65,14 +69,13 @@ public class MyProject implements Project {
             for (int branch : adjlist[current]) {
             
                 if (!checked[branch]) {
-                    //System.out.println("queue getting stuff");
                     q.add(branch);
                     checked[branch] = true;
                 }
 
-                //carry over number of paths
+                /*  adds the previous number of shortest paths
+                */
                 if (distance[branch] > distance[current] + 1) {
-                    //System.out.println("conditional 2");
                     distance[branch] = distance[current] + 1;
                     numPaths[branch] = numPaths[current];
                 }
@@ -81,15 +84,19 @@ public class MyProject implements Project {
                 *   ie. equals to dist[current] + 1
                 */
                 else if (distance[branch] == distance[current] + 1) {
-                    //System.out.println("conditional 3");
                     numPaths[branch] += numPaths[current];
                 }
 
                 
             } 
         }
-        //System.out.println(numPaths[dst]);
-        return numPaths[dst];
+        /*  did the BFS reach dst node?
+        *   if yes then numPaths[dst] will contain the correct value
+        */
+        if (checked[dst]) {
+            return numPaths[dst];
+        }
+        return 0;
     }
 
     /**
