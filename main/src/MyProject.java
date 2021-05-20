@@ -63,7 +63,7 @@ public class MyProject implements Project {
             int current = q.remove();
 
             for (int branch : adjlist[current]) {
-
+            
                 if (!checked[branch]) {
                     //System.out.println("queue getting stuff");
                     q.add(branch);
@@ -88,7 +88,7 @@ public class MyProject implements Project {
                 
             } 
         }
-        System.out.println(numPaths[dst]);
+        //System.out.println(numPaths[dst]);
         return numPaths[dst];
     }
 
