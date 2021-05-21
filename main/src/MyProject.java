@@ -188,7 +188,7 @@ public class MyProject implements Project {
         } else {
             q.add(src);
             while (!q.isEmpty()) {
-                i
+                int i = 0;
             }
         }
 
@@ -201,7 +201,7 @@ public class MyProject implements Project {
         int maxDL = 0;
 
         for (int node : paths) {
-            
+            int i = 0;
         }
         return maxDL;
     }
