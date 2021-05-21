@@ -76,6 +76,8 @@ public class MyProject implements Project {
                 /*  adds the previous number of shortest paths
                 */
                 if (distance[branch] > distance[current] + 1) {
+                    System.out.println(distance[branch]);
+                    System.out.println(distance[current]);
                     distance[branch] = distance[current] + 1;
                     numPaths[branch] = numPaths[current];
                 }
