@@ -154,6 +154,7 @@ public class MyProject implements Project {
         while (!q.isEmpty()) {
             int current = q.remove(); 
 
+            //when adjlist[current] == null it doesn't fucking enter this
             for (int branch : adjlist[current]) {
                 if (!checked[branch]) {
                     q.add(branch);
