@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -209,14 +210,33 @@ public class MyProject implements Project {
     }
 
 
+    /**
+     * BFS, finds all paths to dst node then relates paths to speeds
+     */
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
         Queue<Integer> q = new ArrayDeque<>();
+        int[] paths = new int[adjlist.length];
         
         if (src == dst) {
             return -1;
         } else {
-            
+            q.add(src);
+            while (!q.isEmpty()) {
+                int i = 0;
+            }
         }
-        return 0;
+
+        int maxDL = speed(adjlist, speeds, paths);
+
+        return maxDL;
+    }
+
+    private int speed(int[][] adjlist, int[][] speeds, int[] paths){
+        int maxDL = 0;
+
+        for (int node : paths) {
+            int i = 0;
+        }
+        return maxDL;
     }
 }
