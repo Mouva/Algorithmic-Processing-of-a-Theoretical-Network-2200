@@ -99,15 +99,27 @@ public class MyProject implements Project {
         return 0;
     }
 
+
     /**
      * Another modified BFS idk
      */
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
         int[] numHops = new int[queries.length];
+        int[] minDist = minDist(adjlist, src); //min dist from src to all nodes
+
         
         for (int i = 0; i < queries.length; i ++) {
             short[] query = queries[i];
-            numHops[i] = numHops(adjlist, addrs, src, query);
+
+            int dstID = dstID(adjlist, addrs, src, query);
+
+            if (dstID == -1) {
+                numHops[i] = Integer.MAX_VALUE;
+            }
+            else {
+                numHops[i] = minDist[dstID];
+            }
+
         }
 
         return numHops;
@@ -117,27 +129,57 @@ public class MyProject implements Project {
     /*  is the currentAddrs a subnet?
     *   @returns true of false
     */  
-    private boolean inSubnet(short[] currentAddrs, short[] query) {
-        boolean addrsInSubnet = true;
+    private boolean isSubnet(short[] currentAddrs, short[] query) {
+        boolean addrsIsSubnet = true;
         for (int i = 0; i < query.length; i++) {
             if (query[i] != currentAddrs[i]) {
-                addrsInSubnet = false;
+                addrsIsSubnet = false;
             }
         }
-        return addrsInSubnet;
+        return addrsIsSubnet;
     }
 
-    /*  assuming the requested subnet is part of the network
-    *   run this piece of code to get numHops
+    /*  is the requested subnet in the network?
+    *   if yes, return destination device ID
     */
-    private int numHops(int[][] adjlist, short[][] addrs, int src, short[] query) {
+    private int dstID(int[][] adjlist, short[][] addrs, int src, short[] query) {
+        int deviceID = -1;
+        int length = adjlist.length;
+        Queue<Integer> q = new ArrayDeque<>(); 
+        boolean[] checked = new boolean[length];
+
+        q.add(src);
+        
+        while (!q.isEmpty()) {
+            int current = q.remove(); 
+
+            for (int branch : adjlist[current]) {
+                if (!checked[branch]) {
+                    q.add(branch);
+                    checked[current] = true;                    
+                }
+                
+                if (isSubnet(addrs[current], query)) { 
+                    deviceID = current;
+                    break;
+                }
+            }
+            if (deviceID != -1) break;
+        }
+
+
+        return deviceID;
+    }
+
+
+    /*  returns minimum number of hops to all reachable nodes given src node
+    */
+    private int[] minDist(int[][] adjlist, int src) {
         int length = adjlist.length; 
-        //int numHops = -1;
         int[] parent = new int[length];
         int[] dist = new int[length];
         Queue<Integer> q = new ArrayDeque<>();
         boolean[] checked = new boolean[length]; 
-        boolean foundSubnet = false;
 
         for (int i = 0; i < length; i ++) {
             checked[i] = false;
@@ -149,6 +191,7 @@ public class MyProject implements Project {
         
         while (!q.isEmpty()) {
             int current = q.remove();
+
             for (int branch : adjlist[current]) {
                 //add unexplored nodes to queue
                 if (!checked[branch]) {
@@ -157,21 +200,12 @@ public class MyProject implements Project {
                     parent[branch] = current;
                     dist[branch] = dist[parent[branch]] + 1; 
                 }
-
-                if (inSubnet(addrs[current], query)) {
-                    foundSubnet = true;
-                    return dist[current];
-                }
             }
         }
-
-
-
-
-
-        return Integer.MAX_VALUE; 
-
-
+        for (int i = 0; i < dist.length;  i++) {
+            System.out.println(dist[i]);
+        }
+        return dist; 
     }
 
 
