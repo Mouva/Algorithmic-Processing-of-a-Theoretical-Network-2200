@@ -111,22 +111,16 @@ public class MyProject implements Project {
         int[] distances = new int[length];
 
         for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                if (queries[j] != addrs[j]) {
-                    count++;
-                } else {
-                    distances[queries[j][j]] = count;
-                    count = 0;
-                    break;
-                }
+            if (queries[i][i] != addrs[i][i]) {
+                count++;
+            } else {
+                distances[queries[i][i]] = count;
+                count = 0;
+                break;
             }
         }
-        for (int i = 0; i < length; i++) {
-            System.out.println(queries[i][i] + "and" + addrs[i][i]);
-            System.out.println(queries[i] + "and" + addrs[i]);
-        }  
         return distances;
-    }
+    }  
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
         // TODO
