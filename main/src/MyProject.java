@@ -132,38 +132,46 @@ public class MyProject implements Project {
     */
     private int numHops(int[][] adjlist, short[][] addrs, int src, short[] query) {
         int length = adjlist.length; 
-        int numHops = -1;
+        //int numHops = -1;
+        int[] parent = new int[length];
+        int[] dist = new int[length];
         Queue<Integer> q = new ArrayDeque<>();
         boolean[] checked = new boolean[length]; 
         boolean foundSubnet = false;
 
         for (int i = 0; i < length; i ++) {
             checked[i] = false;
+            dist[i] = 0;
         }
 
         q.add(src);
         checked[src] = true;
+        
         while (!q.isEmpty()) {
             int current = q.remove();
-            numHops ++;
             for (int branch : adjlist[current]) {
                 //add unexplored nodes to queue
                 if (!checked[branch]) {
                     q.add(branch);
                     checked[branch] = true;
+                    parent[branch] = current;
+                    dist[branch] = dist[parent[branch]] + 1; 
                 }
 
                 if (inSubnet(addrs[current], query)) {
                     foundSubnet = true;
-                    break;
+                    return dist[current];
                 }
             }
         }
 
-        if (!foundSubnet) {
-            return Integer.MAX_VALUE; 
-        }
-        return numHops;
+
+
+
+
+        return Integer.MAX_VALUE; 
+
+
     }
 
 
