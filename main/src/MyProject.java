@@ -101,27 +101,80 @@ public class MyProject implements Project {
 
     /**
      * Another modified BFS idk
-     * Lacks ability to recognise what the present query is, need to add a loop to track this
      */
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
-        int count = 0;
-        int length = adjlist.length;
-        int[] distances = new int[length];
+        int[] numHops = new int[queries.length];
+        
+        for (int i = 0; i < queries.length; i ++) {
+            short[] query = queries[i];
+            numHops[i] = numHops(adjlist, addrs, src, query);
+        }
 
-        for (int i = 0; i < length; i++) {
-            if (queries[i][i] != addrs[i][i]) {
-                count++;
-            } else {
-                distances[queries[i][i]] = count;
-                count = 0;
-                break;
+        return numHops;
+    }
+    
+
+    /*  is the currentAddrs a subnet?
+    *   @returns true of false
+    */  
+    private boolean inSubnet(short[] currentAddrs, short[] query) {
+        boolean addrsInSubnet = true;
+        for (int i = 0; i < query.length; i++) {
+            if (query[i] != currentAddrs[i]) {
+                addrsInSubnet = false;
             }
         }
-        return distances;
-    }  
+        return addrsInSubnet;
+    }
+
+    /*  assuming the requested subnet is part of the network
+    *   run this piece of code to get numHops
+    */
+    private int numHops(int[][] adjlist, short[][] addrs, int src, short[] query) {
+        int length = adjlist.length; 
+        int numHops = -1;
+        Queue<Integer> q = new ArrayDeque<>();
+        boolean[] checked = new boolean[length]; 
+        boolean foundSubnet = false;
+
+        for (int i = 0; i < length; i ++) {
+            checked[i] = false;
+        }
+
+        q.add(src);
+        checked[src] = true;
+        while (!q.isEmpty()) {
+            int current = q.remove();
+            numHops ++;
+            for (int branch : adjlist[current]) {
+                //add unexplored nodes to queue
+                if (!checked[branch]) {
+                    q.add(branch);
+                    checked[branch] = true;
+                }
+
+                if (inSubnet(addrs[current], query)) {
+                    foundSubnet = true;
+                    break;
+                }
+            }
+        }
+
+        if (!foundSubnet) {
+            return Integer.MAX_VALUE; 
+        }
+        return numHops;
+    }
+
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
-        // TODO
+        Queue<Integer> q = new ArrayDeque<>();
+        
+        if (src == dst) {
+            return -1;
+        } else {
+            
+        }
         return 0;
     }
 }
