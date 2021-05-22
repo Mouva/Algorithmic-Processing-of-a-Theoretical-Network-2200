@@ -87,7 +87,6 @@ public class MyProject implements Project {
                     numPaths[branch] += numPaths[current];
                 }
 
-                
             } 
         }
         /*  did the BFS reach dst node?
