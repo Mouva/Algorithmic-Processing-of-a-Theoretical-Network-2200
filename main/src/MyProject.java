@@ -6,9 +6,17 @@ import java.util.Queue;
  * @author Siwei Lin 22967534
  */
 
+
 public class MyProject implements Project {
+
+    //zero argument constructor
+    public  MyProject() {}
+
     /**
-     * Breadth-first search
+     * Breadth-first search to determine if all devices are connected
+     * 
+     * @param adjlist describes how nodes are connected
+     * @return true or false
      */ 
     public boolean allDevicesConnected(int[][] adjlist) {
         int length = adjlist.length;
@@ -42,9 +50,12 @@ public class MyProject implements Project {
     }
 
     /**
-     * BFS always finds the shortest path. When BFS encounters the same
-     * node,
+     * BFS based algorithm to determine the number of shortest paths
      * 
+     * @param adjlist describes how nodes are connected
+     * @param src the source node
+     * @param dst the destination node
+     * @return number of shortest paths
      */
     public int numPaths(int[][] adjlist, int src, int dst) {
         int length = adjlist.length;
@@ -53,6 +64,7 @@ public class MyProject implements Project {
         int[] distance = new int[length];
         int[] numPaths = new int[length];
 
+        //if src is same 
         if (src == dst) {
             return 1;
         }
@@ -77,15 +89,16 @@ public class MyProject implements Project {
                     checked[branch] = true;
                 }
 
-                /*  adds the previous number of shortest paths
+                /*  assigns the number of paths of current node to branch node
+                *   if the new branch is not yet explored
                 */
                 if (distance[branch] > distance[current] + 1) {
                     distance[branch] = distance[current] + 1;
                     numPaths[branch] = numPaths[current];
                 }
 
-                /*  branch is on the shortest path 
-                *   ie. equals to dist[current] + 1
+                /*  determines if another shortest path is found
+                *   increments numPaths at the branch node
                 */
                 else if (distance[branch] == distance[current] + 1) {
                     numPaths[branch] += numPaths[current];
@@ -106,11 +119,11 @@ public class MyProject implements Project {
     /**
      * Uses BFS to determine the minimum hops required to reach destination given source
      * node and subnet address.
+     * 
      * @param adjlist decribes how devices are linked based on deviceID
      * @param addrs contains the network address of the device based on deviceID
      * @param src deviceID at source node
      * @param queries array of destination subnet addresses
-     * 
      * @return an array of minimum number of hops
      */
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
@@ -126,7 +139,11 @@ public class MyProject implements Project {
     }
 
 
-    /** is the currentAddrs a subnet?
+    /** 
+     * Determines whether the current device is a subnet.
+     * 
+     * @param currentAddrs array containing the network address of the device
+     * @param query array containing the requested network subnet
      * @return true of false
      */  
     private boolean isSubnet(short[] currentAddrs, short[] query) {
@@ -140,8 +157,16 @@ public class MyProject implements Project {
     }
 
 
-    /**  returns minimum number of hops to a reachable nodes given src node
-     *   if the destination node is not reachable, returns integer max value
+    /** 
+     * Determines the minimum distance to the destination node
+     * given the source node.
+     * 
+     * @param adjlist describes how the network is connected
+     * @param addrs 2d array with the network address of each devices
+     * @param src the source node
+     * @param dst the destination node
+     * @return returns minimum number of hops to a reachable nodes given src node
+     * if the destination node is not reachable, returns integer max value
      */
     private int minDist(int[][] adjlist, short[][] addrs, int src, short[] query) {
         int deviceID = -1;
@@ -187,7 +212,15 @@ public class MyProject implements Project {
         return Integer.MAX_VALUE; 
     }
 
-
+    /**
+     * BFS determines if the destination node is reachable from the source node
+     * 
+     * @param flowGraph graph containing the available flow capacity given vector u-v
+     * @param src the source node
+     * @param dst the destination node
+     * @param parent array of parent nodes to track the path taken
+     * @return true or false
+     */
     public boolean dstReachable(int flowGraph[][], int src, int dst, int parent[]) {
         int length = flowGraph.length;
         boolean checked[] = new boolean[length];
@@ -204,11 +237,9 @@ public class MyProject implements Project {
         while (!q.isEmpty()) {
             int u = q.remove(); 
 
-
             for (int v = 0; v < length; v ++) {
-
-                
-                if (checked[v] == false  && flowGraph[u][v] > 0) {
+                //only execute when there are available flow capacity
+                if (!checked[v] && flowGraph[u][v] > 0) {
                     //return immediately when dst node is reached
                     if (v == dst) {
                         parent[v] = u;
@@ -220,9 +251,19 @@ public class MyProject implements Project {
                 }
             }
         }
-        return checked[dst];
+        return false;
     } 
 
+
+    /**
+     * Uses Ford-Fulkerson algorithm to determine maximum flow
+     * 
+     * @param adjlist describes how network is connected
+     * @param speeds describes the flow capacity of the edge
+     * @param src the source node
+     * @param dst the destination node
+     * @return maximum flow
+     */
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
         int u;
         int v;
@@ -249,8 +290,6 @@ public class MyProject implements Project {
             }
         }
 
-
-
         while (dstReachable(flowCap, src, dst, parent)) {
             int path_flow = Integer.MAX_VALUE;
 
@@ -269,8 +308,6 @@ public class MyProject implements Project {
             max_flow += path_flow;
         }
 
-        
         return max_flow;
     }
-
 }
