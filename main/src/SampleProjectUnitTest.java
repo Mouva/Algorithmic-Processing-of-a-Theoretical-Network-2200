@@ -331,7 +331,7 @@ public class SampleProjectUnitTest {
         };
         speeds = new int[][] { { 5, 10 }, { 5, 10 } };
 
-        testInt(pref + "speed to self", proj.maxDownloadSpeed(adjlist, speeds, 0, 0), -1);
+        testInt(pref + "speed to self", proj.maxDownloadSpeed(adjlist, speeds, 0, 0), -1); 
     }
 
     public static void printSummary() {

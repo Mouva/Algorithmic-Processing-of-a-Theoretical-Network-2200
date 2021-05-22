@@ -185,38 +185,6 @@ public class MyProject implements Project {
     }
 
 
-    /**
-     * BFS, finds all paths to dst node then relates paths to speeds
-     */
-    /*
-    public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
-        Queue<Integer> q = new ArrayDeque<>();
-        int[] paths = new int[adjlist.length];
-        
-        if (src == dst) {
-            return -1;
-        } else {
-            q.add(src);
-            while (!q.isEmpty()) {
-                int i = 0;
-            }
-        }
-
-        int maxDL = speed(adjlist, speeds, paths);
-
-        return maxDL;
-    }
-
-    private int speed(int[][] adjlist, int[][] speeds, int[] paths){
-        int maxDL = 0;
-
-        for (int node : paths) {
-            int i = 0;
-        }
-        return maxDL;
-    } */
-
-    
     public boolean dstReachable(int flowGraph[][], int src, int dst, int parent[]) {
         int length = flowGraph.length;
         boolean checked[] = new boolean[length];
@@ -233,24 +201,23 @@ public class MyProject implements Project {
         while (!q.isEmpty()) {
             int u = q.remove(); 
 
+
             for (int v = 0; v < length; v ++) {
 
-                if (checked[v] == false && flowGraph[u][v] > 0) {
-
+                
+                if (checked[v] == false  && flowGraph[u][v] > 0) {
                     //return immediately when dst node is reached
                     if (v == dst) {
                         parent[v] = u;
                         return true;
                     }
-
                     q.add(v);
                     parent[v] = u;
                     checked[v] = true;
                 }
             }
         }
-        //dst node is unreachable, return false
-        return false;
+        return checked[dst];
     } 
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
@@ -260,7 +227,6 @@ public class MyProject implements Project {
         int parent[] = new int[length];
         int[][] flowCap = new int[length][length];
         int max_flow = 0; 
-        //int[][] rGraph = new int[length][length];
 
         if (src == dst) {
             return -1;
@@ -268,16 +234,19 @@ public class MyProject implements Project {
 
         //create graph that stores the capacity of flow form vector u to v
         for (u = 0; u < length; u ++) {
-            for (int i = 0; i < adjlist[u].length; i ++) {
-                for (v = 0; v < length; v ++) {
-                    if (v == adjlist[u][i]) {
-                        flowCap[u][v] = speeds[u][i];
-                    } else {
-                        flowCap[u][v] = 0;
-                    }
-                }
+            for (v = 0; v < length; v ++) {
+                flowCap[u][v] = 0;
             }
         }
+
+        for (u = 0; u < length; u ++) { 
+            for (int i = 0; i < adjlist[u].length; i ++) {
+                v = adjlist[u][i];
+                flowCap[u][v] = speeds[u][i];
+            }
+        }
+
+
 
         while (dstReachable(flowCap, src, dst, parent)) {
             int path_flow = Integer.MAX_VALUE;
@@ -287,16 +256,17 @@ public class MyProject implements Project {
                 path_flow = Math.min(path_flow, flowCap[u][v]);
             }
 
+            //update remaining capacity of the edges
             for (v = dst; v != src; v = parent[v]) {
                 u = parent[v]; 
                 flowCap[u][v] -= path_flow;
                 flowCap[v][u] += path_flow;
             }
-
+            
             max_flow += path_flow;
         }
 
-        System.out.println(max_flow);
+        
         return max_flow;
     }
 
