@@ -42,7 +42,9 @@ public class MyProject implements Project {
     }
 
     /**
-     * Modified BFS
+     * BFS always finds the shortest path. When BFS encounters the same
+     * node,
+     * 
      */
     public int numPaths(int[][] adjlist, int src, int dst) {
         int length = adjlist.length;
@@ -60,7 +62,6 @@ public class MyProject implements Project {
             numPaths[i] = 1;
             distance[i] = Integer.MAX_VALUE;
         }
-
 
         q.add(src);
         checked[src] = true;
@@ -89,11 +90,11 @@ public class MyProject implements Project {
                 else if (distance[branch] == distance[current] + 1) {
                     numPaths[branch] += numPaths[current];
                 }
-                System.out.println(distance[branch]);
             } 
         }
         /*  did the BFS reach dst node?
         *   if yes then numPaths[dst] will contain the correct value
+        *   else, 0 is returned
         */
         if (checked[dst]) {
             return numPaths[dst];
