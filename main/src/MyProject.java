@@ -1,11 +1,12 @@
-// Adrian Bedford 22973676, Siwei Lin 22967534
-
-import java.util.*;
+import java.sql.ResultSet;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 /**
  * @author Adrian Bedford 22973676
  * @author Siwei Lin 22967534
  */
+
 public class MyProject implements Project {
     /**
      * Breadth-first search
@@ -152,16 +153,18 @@ public class MyProject implements Project {
         while (!q.isEmpty()) {
             int current = q.remove(); 
 
+            if (isSubnet(addrs[current], query)) { 
+                deviceID = current;
+                break;
+            }
+            //when adjlist[current] == null it doesn't fucking enter this
             for (int branch : adjlist[current]) {
                 if (!checked[branch]) {
                     q.add(branch);
                     checked[current] = true;                    
                 }
                 
-                if (isSubnet(addrs[current], query)) { 
-                    deviceID = current;
-                    break;
-                }
+
             }
             if (deviceID != -1) break;
         }
@@ -201,12 +204,10 @@ public class MyProject implements Project {
                 }
             }
         }
-
-
-
-
-
-        return Integer.MAX_VALUE; 
+        //for (int i = 0; i < dist.length;  i++) {
+        //    System.out.println(dist[i]);
+        //}
+        return dist; 
     }
 
 
@@ -214,36 +215,29 @@ public class MyProject implements Project {
      * BFS, finds all paths to dst node then relates paths to speeds
      */
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
-        List<List<Integer>> results = speed(adjlist, src, dst);
-        int speed = 0;
-
+        Queue<Integer> q = new ArrayDeque<>();
+        int[] paths = new int[adjlist.length];
+        
         if (src == dst) {
             return -1;
         } else {
-            for (List<Integer> paths : results) {
-                for (int node : paths) {
-                    speed += speeds[node][node];
-                }
+            q.add(src);
+            while (!q.isEmpty()) {
+                int i = 0;
             }
         }
 
-        return speed;
+        int maxDL = speed(adjlist, speeds, paths);
+
+        return maxDL;
     }
 
-    private List<List<Integer>> speed(int[][] adjlist, int src, int dst){
-        Queue<List<Integer>> q = new LinkedList<>();
-        List<List<Integer>> results = new ArrayList<>();
+    private int speed(int[][] adjlist, int[][] speeds, int[] paths){
+        int maxDL = 0;
 
-        q.add(Arrays.asList(src));
-        while (!q.isEmpty()) {
-            List<Integer> path = q.poll();
-            if (path.get(0) == dst) {
-                results.add(new ArrayList<>(path));
-            } else {
-
-            }
+        for (int node : paths) {
+            int i = 0;
         }
-
-        return results;
+        return maxDL;
     }
 }
