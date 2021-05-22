@@ -87,7 +87,7 @@ public class MyProject implements Project {
                 else if (distance[branch] == distance[current] + 1) {
                     numPaths[branch] += numPaths[current];
                 }
-
+                System.out.println(distance[branch]);
             } 
         }
         /*  did the BFS reach dst node?
@@ -101,7 +101,7 @@ public class MyProject implements Project {
 
 
     /**
-     * Uses BFS to determine the minium hops required to reach destination given source
+     * Uses BFS to determine the minimum hops required to reach destination given source
      * node and subnet address.
      * @param adjlist decribes how devices are linked based on deviceID
      * @param addrs contains the network address of the device based on deviceID
