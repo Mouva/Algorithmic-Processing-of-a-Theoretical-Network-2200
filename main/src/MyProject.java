@@ -69,6 +69,7 @@ public class MyProject implements Project {
 
             for (int branch : adjlist[current]) {
             
+                // adds unexplored branch to the queue
                 if (!checked[branch]) {
                     q.add(branch);
                     checked[branch] = true;
@@ -101,34 +102,31 @@ public class MyProject implements Project {
 
 
     /**
-     * Another modified BFS idk
+     * Uses BFS to determine the minium hops required to reach destination given source
+     * node and subnet address.
+     * @param adjlist decribes how devices are linked based on deviceID
+     * @param addrs contains the network address of the device based on deviceID
+     * @param src deviceID at source node
+     * @param queries array of destination subnet addresses
+     * 
+     * @return an array of minimum number of hops
      */
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
         int[] numHops = new int[queries.length];
-        int[] minDist = minDist(adjlist, src); //min dist from src to all nodes
-
         
         for (int i = 0; i < queries.length; i ++) {
             short[] query = queries[i];
 
-            int dstID = dstID(adjlist, addrs, src, query);
-
-            if (dstID == -1) {
-                numHops[i] = Integer.MAX_VALUE;
-            }
-            else {
-                numHops[i] = minDist[dstID];
-            }
-
+            numHops[i] = minDist(adjlist, addrs, src, query);
         }
 
         return numHops;
     }
 
 
-    /*  is the currentAddrs a subnet?
-    *   @returns true of false
-    */  
+    /** is the currentAddrs a subnet?
+     * @return true of false
+     */  
     private boolean isSubnet(short[] currentAddrs, short[] query) {
         boolean addrsIsSubnet = true;
         for (int i = 0; i < query.length; i++) {
@@ -139,44 +137,12 @@ public class MyProject implements Project {
         return addrsIsSubnet;
     }
 
-    /*  is the requested subnet in the network?
-    *   if yes, return destination device ID
-    */
-    private int dstID(int[][] adjlist, short[][] addrs, int src, short[] query) {
+
+    /**  returns minimum number of hops to a reachable nodes given src node
+     *   if the destination node is not reachable, returns integer max value
+     */
+    private int minDist(int[][] adjlist, short[][] addrs, int src, short[] query) {
         int deviceID = -1;
-        int length = adjlist.length;
-        Queue<Integer> q = new ArrayDeque<>(); 
-        boolean[] checked = new boolean[length];
-
-        q.add(src);
-        
-        while (!q.isEmpty()) {
-            int current = q.remove(); 
-
-            if (isSubnet(addrs[current], query)) { 
-                deviceID = current;
-                break;
-            }
-            //when adjlist[current] == null it doesn't fucking enter this
-            for (int branch : adjlist[current]) {
-                if (!checked[branch]) {
-                    q.add(branch);
-                    checked[current] = true;                    
-                }
-                
-
-            }
-            if (deviceID != -1) break;
-        }
-
-
-        return deviceID;
-    }
-
-
-    /*  returns minimum number of hops to all reachable nodes given src node
-    */
-    private int[] minDist(int[][] adjlist, int src) {
         int length = adjlist.length; 
         int[] parent = new int[length];
         int[] dist = new int[length];
@@ -194,20 +160,29 @@ public class MyProject implements Project {
         while (!q.isEmpty()) {
             int current = q.remove();
 
+            if (isSubnet(addrs[current], query)) { 
+                deviceID = current;
+                break;
+            }
+
             for (int branch : adjlist[current]) {
                 //add unexplored nodes to queue
                 if (!checked[branch]) {
                     q.add(branch);
                     checked[branch] = true;
+
+                    //tracks distance from src
                     parent[branch] = current;
                     dist[branch] = dist[parent[branch]] + 1; 
                 }
             }
         }
-        //for (int i = 0; i < dist.length;  i++) {
-        //    System.out.println(dist[i]);
-        //}
-        return dist; 
+
+        if (deviceID != -1) {
+            //if destination device is reachable, dist is returned immediately
+            return dist[deviceID];
+        }
+        return Integer.MAX_VALUE; 
     }
 
 
