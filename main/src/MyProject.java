@@ -61,8 +61,10 @@ public class MyProject implements Project {
             distance[i] = Integer.MAX_VALUE;
         }
 
+
         q.add(src);
         checked[src] = true;
+        distance[src] = 0;
         while (!q.isEmpty()) {
             int current = q.remove();
 
