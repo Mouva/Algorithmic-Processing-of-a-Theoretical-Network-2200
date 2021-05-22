@@ -189,6 +189,7 @@ public class MyProject implements Project {
     /**
      * BFS, finds all paths to dst node then relates paths to speeds
      */
+    /*
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
         Queue<Integer> q = new ArrayDeque<>();
         int[] paths = new int[adjlist.length];
@@ -214,5 +215,87 @@ public class MyProject implements Project {
             int i = 0;
         }
         return maxDL;
+    } */
+
+    
+    public boolean dstReachable(int flowGraph[][], int src, int dst, int parent[]) {
+        int length = flowGraph.length;
+        boolean checked[] = new boolean[length];
+        Queue<Integer> q = new ArrayDeque<>();
+
+        for (int i = 0; i < length; i ++) {
+            checked[i] = false;
+        }
+
+        q.add(src); 
+        checked[src] = true;
+        parent[src] = -1;
+
+        while (!q.isEmpty()) {
+            int u = q.remove(); 
+
+            for (int v = 0; v < length; v ++) {
+
+                if (checked[v] == false && flowGraph[u][v] > 0) {
+
+                    //return immediately when dst node is reached
+                    if (v == dst) {
+                        parent[v] = u;
+                        return true;
+                    }
+
+                    q.add(v);
+                    parent[v] = u;
+                    checked[v] = true;
+                }
+            }
+        }
+        //dst node is unreachable, return false
+        return false;
+    } 
+
+    public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
+        int u;
+        int v;
+        int length = adjlist.length;
+        int parent[] = new int[length];
+        int[][] flowCap = new int[length][length];
+        int max_flow = 0; 
+        //int[][] rGraph = new int[length][length];
+
+
+        //create graph that stores the capacity of flow form vector u to v
+        for (u = 0; u < length; u ++) {
+            for (int i = 0; i < adjlist[u].length; i ++) {
+                for (v = 0; v < length; v ++) {
+                    if (v == adjlist[u][i]) {
+                        flowCap[u][v] = speeds[u][i];
+                    } else {
+                        flowCap[u][v] = 0;
+                    }
+                }
+            }
+        }
+
+        while (dstReachable(flowCap, src, dst, parent)) {
+            int path_flow = Integer.MAX_VALUE;
+
+            for (v = dst; v != src; v = parent[v]) {
+                u = parent[v];
+                path_flow = Math.min(path_flow, flowCap[u][v]);
+            }
+
+            for (v = dst; v != src; v = parent[v]) {
+                u = parent[v]; 
+                flowCap[u][v] -= path_flow;
+                flowCap[v][u] += path_flow;
+            }
+
+            max_flow += path_flow;
+        }
+
+        System.out.println(max_flow);
+        return max_flow;
     }
+
 }
