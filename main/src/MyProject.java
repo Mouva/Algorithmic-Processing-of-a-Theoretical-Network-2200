@@ -1,4 +1,3 @@
-import java.sql.ResultSet;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -10,7 +9,7 @@ import java.util.Queue;
 public class MyProject implements Project {
     /**
      * Breadth-first search
-     */
+     */ 
     public boolean allDevicesConnected(int[][] adjlist) {
         int length = adjlist.length;
         Queue<Integer> q = new ArrayDeque<>();
@@ -263,6 +262,9 @@ public class MyProject implements Project {
         int max_flow = 0; 
         //int[][] rGraph = new int[length][length];
 
+        if (src == dst) {
+            return -1;
+        }
 
         //create graph that stores the capacity of flow form vector u to v
         for (u = 0; u < length; u ++) {
